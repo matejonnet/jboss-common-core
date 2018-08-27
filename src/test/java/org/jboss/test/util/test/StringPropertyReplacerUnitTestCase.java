@@ -18,9 +18,11 @@
 
 package org.jboss.test.util.test;
 
+import java.util.function.Function;
 import java.util.Properties;
 
 import junit.framework.TestCase;
+import org.jboss.util.StringPropertyReplacer;
 import static org.jboss.util.StringPropertyReplacer.replaceProperties;
 
 /**
@@ -92,6 +94,17 @@ public class StringPropertyReplacerUnitTestCase extends TestCase
       basicReplacementTest(true);
    }
    
+   public void testBasicReplacementFromProvider()
+   {
+      String input = "${"+PROP_A+"}";
+      String output = null;
+
+      Function<String, String> provider = key -> setupProperties().getProperty(key);
+      output = replaceProperties(input, provider);
+
+      assertEquals(VALUE, output);
+   }
+
    private void basicReplacementTest(boolean useSysProps)
    {
       String input = "${"+PROP_A+"}";
